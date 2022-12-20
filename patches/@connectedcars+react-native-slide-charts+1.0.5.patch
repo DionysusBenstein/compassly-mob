@@ -1,0 +1,120 @@
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/SlideAreaChart.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/SlideAreaChart.tsx
+index aeca88c..a90abf8 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/SlideAreaChart.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/SlideAreaChart.tsx
+@@ -358,7 +358,7 @@ class SlideAreaChart extends Component<SlideAreaChartComponentProps, State> {
+   }
+ 
+   renderTouchable() {
+-    const { onPress, axisWidth, shouldCancelWhenOutside, paddingLeft, paddingRight, scrollable } = this.props
++    const { onPress, axisWidth, shouldCancelWhenOutside, paddingLeft, paddingRight, scrollable, handleClick } = this.props
+     const { x } = this.state
+ 
+     /**
+@@ -412,8 +412,11 @@ class SlideAreaChart extends Component<SlideAreaChartComponentProps, State> {
+           onHandlerStateChange={evt => {
+             if (evt.nativeEvent.state === 1 || evt.nativeEvent.state === 3 || evt.nativeEvent.state === 5) {
+               this.showIndicator(0)
++              handleClick(false);
++              // console.log("pressout")
+             } else if (evt.nativeEvent.state === 2) {
+               this.showIndicator(1)
++              handleClick(true);
+             }
+           }}
+         >
+@@ -491,7 +494,7 @@ class SlideAreaChart extends Component<SlideAreaChartComponentProps, State> {
+ 
+       // Run animation and on complete add the touch listener to prevent interrupting the animation
+       if (animated) {
+-        Animated.spring(this.state.cursorY, { toValue: 1, friction: 7, useNativeDriver: true, }).start(() => {
++        Animated.spring(this.state.cursorY, { toValue: 1, friction: 7, useNativeDriver: false, }).start(() => {
+           this.state.x.addListener(({ value }) => { this.moveCursorBinary(value) })
+         })
+       } else {
+@@ -538,7 +541,7 @@ class SlideAreaChart extends Component<SlideAreaChartComponentProps, State> {
+ 
+     if (animated) {
+       this.state.cursorY.addListener(({ value }) => this.animateChart(value))
+-      Animated.spring(this.state.cursorY, { toValue: 1, friction: 7, useNativeDriver: true, }).start(() => {
++      Animated.spring(this.state.cursorY, { toValue: 1, friction: 7, useNativeDriver: false, }).start(() => {
+         this.isAnimating = false
+         this.state.x.addListener(({ value }) => { this.moveCursorBinary(value) })
+       }
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/AreaChart.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/AreaChart.tsx
+index d43ebe0..dc8acb2 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/AreaChart.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/AreaChart.tsx
+@@ -43,8 +43,6 @@ class AreaChart extends Component<AreaChartProps> {
+       height,
+       line,
+       scaleY,
+-      xAxisProps,
+-      yAxisProps,
+       axisWidth,
+       chartLineWidth,
+       yRange,
+@@ -53,48 +51,19 @@ class AreaChart extends Component<AreaChartProps> {
+       chartLineColor,
+       data,
+       scaleX,
+-      axisHeight,
+       paddingLeft,
+       paddingRight,
+-      paddingTop,
+-      paddingBottom,
+     } = this.props
+ 
+     const startX = data.length > 1 ? scaleX(data[0].x) : axisWidth + paddingLeft
+     const stopX =
+       data.length > 1 ? scaleX(data[data.length - 1].x) : width - paddingRight
+ 
++    
++
+     return (
+-      <Svg {...{ width, height }}>
++      <Svg width={width + axisWidth} height={height}>
+         <Defs>{renderFillGradient({ id: 'gradient' })}</Defs>
+-        <YAxis
+-          data={data}
+-          scaleX={scaleX}
+-          scaleY={scaleY}
+-          yRange={yRange}
+-          width={width}
+-          height={height}
+-          axisWidth={axisWidth}
+-          axisHeight={axisHeight}
+-          paddingLeft={paddingLeft}
+-          paddingRight={paddingRight}
+-          paddingTop={paddingTop}
+-          paddingBottom={paddingBottom}
+-          {...yAxisProps}
+-        />
+-        <XAxis
+-          data={data}
+-          scaleX={scaleX}
+-          scaleY={scaleY}
+-          yRange={yRange}
+-          width={width}
+-          height={height}
+-          axisHeight={axisHeight}
+-          axisWidth={axisWidth}
+-          paddingLeft={paddingLeft}
+-          paddingRight={paddingRight}
+-          {...xAxisProps}
+-        />
+         <AnimatedPath
+           ref={this.animatedFillRef}
+           d={`${line} L ${stopX} ${scaleY(yRange[0])} L ${startX} ${scaleY(
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/cursor/CursorLine.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/cursor/CursorLine.tsx
+index 15a5fef..9e2975b 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/cursor/CursorLine.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/cursor/CursorLine.tsx
+@@ -34,6 +34,7 @@ class CursorLine extends Component<CursorLineProps> {
+ const styles = StyleSheet.create({
+   line: {
+     position: 'absolute',
++    
+   },
+ })
+ 

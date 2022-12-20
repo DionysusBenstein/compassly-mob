@@ -1,0 +1,14 @@
+{
+    "bracketSpacing": true,
+    "printWidth": 160,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "importOrder": [
+        "^react(.*)$",
+        "^react-(.*)$",
+        "^@reduxjs/(.*)$",
+        "<THIRD_PARTY_MODULES>",
+        "^[./]"
+    ],
+    "importOrderSeparation": true
+}

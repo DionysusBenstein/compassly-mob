@@ -1,0 +1,23 @@
+diff --git a/node_modules/react-native-calendars/src/calendar/style.js b/node_modules/react-native-calendars/src/calendar/style.js
+index 49291d8..77916a4 100644
+--- a/node_modules/react-native-calendars/src/calendar/style.js
++++ b/node_modules/react-native-calendars/src/calendar/style.js
+@@ -6,6 +6,7 @@ export default function getStyle(theme = {}) {
+         container: {
+             paddingLeft: 5,
+             paddingRight: 5,
++            paddingBottom: 5,
+             backgroundColor: appStyle.calendarBackground
+         },
+         dayContainer: {
+@@ -19,8 +20,8 @@ export default function getStyle(theme = {}) {
+             backgroundColor: appStyle.calendarBackground
+         },
+         week: {
+-            marginTop: 7,
+-            marginBottom: 7,
++            // marginTop: 7,
++            // marginBottom: 7,
+             flexDirection: 'row',
+             justifyContent: 'space-around'
+         },

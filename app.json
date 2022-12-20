@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "compass",
+    "slug": "compass",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "main"
+}
